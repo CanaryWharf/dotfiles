@@ -1,0 +1,127 @@
+# ENV_VARS
+export PYTHONBREAKPOINT=ipdb.set_trace
+export CLOUDSDK_PYTHON=/home/r/.pyenv/versions/3.7.7/bin/python
+export EDITOR=nvim
+export BROWSER=firefox
+# Aliases
+alias aur="yay"
+# some more ls aliases
+alias ll='ls -alFh'
+alias la='ls -A'
+alias l='ls -CF'
+alias sf="screenfetch"
+alias screenfetch="neofetch"
+alias vim="nvim"
+alias wlist="nmcli dev wifi list"
+alias wscan="nmcli dev wifi rescan"
+alias pipu="pip install --user"
+alias p="python"
+alias ipy="ipython"
+alias pls='sudo !!'
+alias please="pls"
+alias jn="jupyter notebook"
+alias sandenv="source ~/workspace/sandbox/venv/bin/activate"
+alias gt="git status"
+alias gp="git pull"
+alias clock="watch -tn 1 date +%T \|figlet -c"
+alias jenv="archlinux-java"
+alias ap="ansible-playbook"
+
+# My spelling sucks
+alias peotry="poetry"
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# Clean up git repos
+git-tidy() { git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -d; }
+git-tidy-extreme() { git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D; }
+
+function gi() { curl -L -s https://www.gitignore.io/api/$* ;}
+
+function jnkernal() {
+    pip install ipykernel
+    ipython kernel install --user --name=$1
+}
+
+# Functions
+d1 () { 
+    cd ~/workspace/$1
+    venv
+    echo $1 > ~/.lazy-cd
+}
+
+_d1() {
+    compadd $(ls ~/workspace)
+}
+
+compdef _d1 d1
+
+d2 () {
+    d1 $(< ~/.lazy-cd)
+}
+
+get-funcs-in-script() {
+
+    CMDS=$(sed -n -e 's/^\([a-zA-Z0-9_-]\+\)() {/\1/p' $1)
+    if [[ ! -z $CMDS ]]; then
+        echo "Loaded commands: $CMDS" | tr '\n' ' '
+    fi
+}
+
+venv() {
+    if [ -f "ENV" ]; then
+        source ENV
+        get-funcs-in-script ENV
+    fi
+    if [ -d ".venv" ]; then
+        source .venv/bin/activate
+    elif [ -d "venv" ]; then
+        source venv/bin/activate
+    fi
+    if [ -f ".nvmrc" ]; then
+        # $(echo "nvm use")
+        nvm use
+    fi
+}
+
+mkvenv() {
+    if [ -d "venv" ]; then
+        rm -rf "venv"
+    fi
+    pyenv local $1
+    poetry env use $1
+    pyenv local --unset
+    venv
+}
+
+# autocomplete for mkvenv
+_get_installed_virtual_envs() {
+    VERSIONS=$(pyenv versions --bare)
+    _alternative "args:versions:($VERSIONS)"
+}
+
+compdef _get_installed_virtual_envs mkvenv
+
+
+function gm() {
+    if [[ -z "$_GIT_MAIN_BRANCH" ]]; then
+        _GIT_MAIN_BRANCH=$(git remote show origin | grep "HEAD branch" | sed 's/.*: //')
+        if  [[ ! -f "ENV" || -z $(grep "_GIT_MAIN_BRANCH" "ENV") ]]; then
+            echo "export _GIT_MAIN_BRANCH=$_GIT_MAIN_BRANCH" >> "ENV"
+        fi
+    fi
+    if [[ ! -z "$_GIT_MAIN_BRANCH" ]]; then
+
+        git checkout $_GIT_MAIN_BRANCH
+    else
+        echo "Error couldn't get main branch"
+        return 1
+    fi
+}
+
+
+jwt() {
+    jq -R 'split(".") | select(length > 0) | .[0],.[1] | @base64d | fromjson' <<< $1
+}

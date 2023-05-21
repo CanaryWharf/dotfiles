@@ -1,0 +1,99 @@
+#!/bin/zsh
+# shorted commands
+alias k="kubectl"
+alias kx="kubectx"
+alias ks="kubens"
+alias kp="kubectl get pods"
+alias kk="k9s"
+# Watch current pods
+# kubectl --watch doesnt update in place and causes ugly scrolling
+alias kw="watch kubectl get pods"
+
+# gcloud pls
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+
+#krew stuff
+export PATH="${PATH}:${HOME}/.krew/bin"
+
+# create a pod and ssh into it it and delete it after workds
+krun () {
+    while (( "$#" )); do case $1 in
+        -i | --image )
+            shift;
+            local IMAGE=$1
+            ;;
+        -n | --node )
+            shift;
+            local NODE=$1
+            ;;
+    esac; shift; done
+    if [[ -z "$IMAGE" ]]; then
+        echo "Image not specified";
+        return 1;
+    fi
+    NODE_OVERRIDE=""
+    ARGS="--image $IMAGE"
+    if [[ ! -z "$NODE" ]]; then
+        ARGS="$ARGS --overrides='{\"apiVersion\":\"v1\",\"spec\":{\"nodeSelector\":{\"kubernetes.io/hostname\":\"$NODE\"}}}'"
+    fi
+    echo $ARGS
+    kubectl run ${=ARGS} -i --tty --rm --image-pull-policy=Always --restart=Never debuggyboi -- sh
+}
+
+# ssh into existing pod
+kss () { 
+    if [[ -z "$1" ]]; then
+        echo "No pod specified";
+        return 1;
+    fi;
+    POD_NAME=$1;
+    shift;
+    kubectl exec --stdin --tty $POD_NAME $@ -- /bin/bash
+}
+
+# autocomplete for kss
+_get_pods_in_namespace() {
+    KUBEPODTEMPLATE='{{ range .items}}{{.metadata.name}} {{end}}'
+    PODS=$(kubectl get pods --template "$KUBEPODTEMPLATE")
+    echo $PODS
+}
+
+_kubepod_completions() {
+    _alternative "args:pod:($(_get_pods_in_namespace))"
+}
+compdef _kubepod_completions kss
+
+_get_nodes_in_cluster() {
+    KUBENODETEMPLATE='{{ range .items}}{{.metadata.name}} {{end}}'
+    NODES=$(kubectl get nodes --template "$KUBENODETEMPLATE")
+    echo $NODES
+}
+k-delete-node() {
+    set -e
+    local node="$1"
+    local project_string=""
+    while (( "$#" )); do case $1 in
+        --project )
+            shift;
+            local project_string="--project $1"
+            ;;
+        -*|--*=)
+            echo "Error: Unsupported flag $1" >&2
+            return 1
+            ;;
+    esac; shift; done
+    echo "Cordoning $node"
+    kubectl cordon "$node"
+    echo "Draining $node"
+    kubectl drain "$node" --force --ignore-daemonsets --delete-emptydir-data
+    zone="$(kubectl get node "$node" -o jsonpath='{.metadata.labels.topology\.gke\.io/zone}')"
+    instance_group=$(gcloud $project_string compute instances describe --zone="$zone" --format='value[](metadata.items.created-by)' "$node")
+    instance_group="${instance_group##*/}"
+    echo "Deleting instance for node '$node' in zone '$zone' instance group '$instance_group'"
+    gcloud $project_string compute instance-groups managed delete-instances --instances="$node" --zone="$zone" "$instance_group"
+    echo "Deleting instance for node '$node' completed."
+}
+_kubenode_completions() {
+    _alternative "args:node:($(_get_nodes_in_cluster))"
+}
+compdef _kubenode_completions k-delete-node
