@@ -1,6 +1,6 @@
 # ENV_VARS
 export PYTHONBREAKPOINT=ipdb.set_trace
-export CLOUDSDK_PYTHON=/home/r/.pyenv/versions/3.7.7/bin/python
+export CLOUDSDK_PYTHON=/home/r/.pyenv/shims/python
 export EDITOR=nvim
 export BROWSER=firefox
 # Aliases
@@ -26,6 +26,7 @@ alias gp="git pull"
 alias clock="watch -tn 1 date +%T \|figlet -c"
 alias jenv="archlinux-java"
 alias ap="ansible-playbook"
+alias tf="terraform"
 
 # My spelling sucks
 alias peotry="poetry"

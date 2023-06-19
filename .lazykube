@@ -17,6 +17,7 @@ export PATH="${PATH}:${HOME}/.krew/bin"
 
 # create a pod and ssh into it it and delete it after workds
 krun () {
+    local IMAGE=busybox
     while (( "$#" )); do case $1 in
         -i | --image )
             shift;
@@ -26,18 +27,21 @@ krun () {
             shift;
             local NODE=$1
             ;;
+        --dry-run )
+            local DRYRUN='1'
+            ;;
     esac; shift; done
     if [[ -z "$IMAGE" ]]; then
         echo "Image not specified";
         return 1;
     fi
-    NODE_OVERRIDE=""
     ARGS="--image $IMAGE"
     if [[ ! -z "$NODE" ]]; then
-        ARGS="$ARGS --overrides='{\"apiVersion\":\"v1\",\"spec\":{\"nodeSelector\":{\"kubernetes.io/hostname\":\"$NODE\"}}}'"
+        NODE_OVERRIDE="{\"apiVersion\":\"v1\",\"spec\":{\"nodeSelector\":{\"kubernetes.io/hostname\":\"${=NODE}\"},\"tolerations\":[{\"operator\":\"Exists\"}]}}"
+        ARGS="${=ARGS} --overrides=${NODE_OVERRIDE}"
     fi
-    echo $ARGS
-    kubectl run ${=ARGS} -i --tty --rm --image-pull-policy=Always --restart=Never debuggyboi -- sh
+    echo "kubectl run $ARGS"
+    kubectl run ${=ARGS} -i --tty --rm --image-pull-policy=IfNotPresent --restart=Never debuggyboi -- sh
 }
 
 # ssh into existing pod
