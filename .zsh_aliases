@@ -92,6 +92,10 @@ mkvenv() {
         rm -rf "venv"
     fi
     pyenv local $1
+    if ! PYENV_VERSION=$1 poetry --version &> /dev/null
+    then
+        PYENV_VERSION=$1 pip install poetry
+    fi
     poetry env use $1
     pyenv local --unset
     venv
