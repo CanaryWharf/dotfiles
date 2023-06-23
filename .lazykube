@@ -16,7 +16,7 @@ export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 export PATH="${PATH}:${HOME}/.krew/bin"
 
 # create a pod and ssh into it it and delete it after workds
-krun () {
+krun() {
     local IMAGE=busybox
     while (( "$#" )); do case $1 in
         -i | --image )
@@ -45,7 +45,7 @@ krun () {
 }
 
 # ssh into existing pod
-kss () { 
+kss() { 
     if [[ -z "$1" ]]; then
         echo "No pod specified";
         return 1;
