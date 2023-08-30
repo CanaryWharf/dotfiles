@@ -82,7 +82,6 @@ venv() {
         source venv/bin/activate
     fi
     if [ -f ".nvmrc" ]; then
-        # $(echo "nvm use")
         nvm use
     fi
 }

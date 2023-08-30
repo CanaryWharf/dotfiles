@@ -52,7 +52,7 @@ kss() {
     fi;
     POD_NAME=$1;
     shift;
-    kubectl exec --stdin --tty $POD_NAME $@ -- /bin/bash
+    kubectl exec --stdin --tty $POD_NAME $@ -- /bin/sh
 }
 
 # autocomplete for kss
