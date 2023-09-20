@@ -101,3 +101,5 @@ _kubenode_completions() {
     _alternative "args:node:($(_get_nodes_in_cluster))"
 }
 compdef _kubenode_completions k-delete-node
+
+alias k-remove-finalizers="kubectl patch --type json --patch='[{\"op\": \"remove\", \"path\": \"/metadata/finalizers\" } ]'"

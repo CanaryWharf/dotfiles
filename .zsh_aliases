@@ -127,5 +127,6 @@ function gm() {
 
 
 jwt() {
-    jq -R 'split(".") | select(length > 0) | .[0],.[1] | @base64d | fromjson' <<< $1
+    read pipedinput
+    jq -R 'split(".") | select(length > 0) | .[0],.[1] | @base64d | fromjson' <<< $pipedinput
 }
