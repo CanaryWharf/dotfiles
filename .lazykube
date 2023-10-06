@@ -73,13 +73,16 @@ _get_nodes_in_cluster() {
     echo $NODES
 }
 k-delete-node() {
-    set -e
-    local node="$1"
-    local project_string=""
+    local node=""
+    local project=""
     while (( "$#" )); do case $1 in
         --project )
             shift;
-            local project_string="--project $1"
+            local project="$1"
+            ;;
+        --node )
+            shift;
+            local node="$1"
             ;;
         -*|--*=)
             echo "Error: Unsupported flag $1" >&2
@@ -87,14 +90,19 @@ k-delete-node() {
             ;;
     esac; shift; done
     echo "Cordoning $node"
-    kubectl cordon "$node"
+    if [[ -z "$project" || -z "$node" ]] then;
+        echo "No project or node specified";
+        return 1;
+    fi
+    kubectl cordon "$node" || return 1
     echo "Draining $node"
-    kubectl drain "$node" --force --ignore-daemonsets --delete-emptydir-data
+    kubectl drain "$node" --force --ignore-daemonsets --delete-emptydir-data || return 1
     zone="$(kubectl get node "$node" -o jsonpath='{.metadata.labels.topology\.gke\.io/zone}')"
-    instance_group=$(gcloud $project_string compute instances describe --zone="$zone" --format='value[](metadata.items.created-by)' "$node")
+    instance_group=$(gcloud --project $project compute instances describe --zone="$zone" --format='value[](metadata.items.created-by)' "$node")
     instance_group="${instance_group##*/}"
     echo "Deleting instance for node '$node' in zone '$zone' instance group '$instance_group'"
-    gcloud $project_string compute instance-groups managed delete-instances --instances="$node" --zone="$zone" "$instance_group"
+    echo "Cordoning for ${instance_group:?} - ${zone:?}"
+    gcloud --project $project compute instance-groups managed delete-instances --instances="$node" --zone="$zone" "$instance_group" || return 1
     echo "Deleting instance for node '$node' completed."
 }
 _kubenode_completions() {
