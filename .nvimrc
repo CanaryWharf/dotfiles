@@ -25,6 +25,7 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ }
 
 " Autocompletions for languages
+Plug 'SirVer/ultisnips'
 Plug 'deoplete-plugins/deoplete-jedi'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
@@ -49,6 +50,11 @@ Plug 'cappyzawa/starlark.vim'
 " Toggle boolean values
 Plug 'https://github.com/sagarrakshe/toggle-bool'
 call plug#end()
+
+
+let g:UltiSnipsExpandTrigger="<Enter>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 "ignores
 set wildignore+=*/.git/*
