@@ -27,6 +27,8 @@ alias clock="watch -tn 1 date +%T \|figlet -c"
 alias jenv="archlinux-java"
 alias ap="ansible-playbook"
 alias tf="terraform"
+alias gay="lolcat"
+alias hollywood="docker run --rm -it bcbcarl/hollywood"
 
 # My spelling sucks
 alias peotry="poetry"
@@ -86,16 +88,28 @@ venv() {
     fi
 }
 
-mkvenv() {
-    if [ -d "venv" ]; then
-        rm -rf "venv"
-    fi
-    pyenv local $1
+_poetry_venv() {
     if ! PYENV_VERSION=$1 poetry --version &> /dev/null
     then
         PYENV_VERSION=$1 pip install poetry
     fi
     poetry env use $1
+}
+
+_python_venv() {
+    python -m venv .venv
+}
+
+mkvenv() {
+    if [ -d "venv" ]; then
+        rm -rf "venv"
+    fi
+    pyenv local $1
+    if [ -f "pyproject.toml" ]; then
+        _poetry_venv $1
+    else
+        _python_venv $1
+    fi
     pyenv local --unset
     venv
 }

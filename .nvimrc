@@ -52,7 +52,7 @@ Plug 'https://github.com/sagarrakshe/toggle-bool'
 call plug#end()
 
 
-let g:UltiSnipsExpandTrigger="<Enter>"
+let g:UltiSnipsExpandTrigger="<S-Right>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
