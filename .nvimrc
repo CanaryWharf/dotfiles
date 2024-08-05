@@ -36,9 +36,10 @@ Plug 'psf/black', { 'tag': '23.1.0' }
 Plug 'alvan/vim-closetag'
 
 "colorschemes
-Plug 'jaromero/vim-monokai-refined'
-Plug 'Reewr/vim-monokai-phoenix'
-Plug 'sickill/vim-monokai'
+Plug 'Badacadabra/vim-archery'
+Plug 'joshdick/onedark.vim'
+Plug 'CanaryWharf/vim-monokai'
+
 
 "terraform
 Plug 'hashivim/vim-terraform'
@@ -49,6 +50,10 @@ Plug 'cappyzawa/starlark.vim'
 
 " Toggle boolean values
 Plug 'https://github.com/sagarrakshe/toggle-bool'
+
+" AI stuff
+Plug 'github/copilot.vim'
+
 call plug#end()
 
 
@@ -74,12 +79,17 @@ command Pjson %!python -m json.tool
 set completeopt-=preview
 
 "Ricing
+if has('termguicolors')
+    set termguicolors
+endif
 set number
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='powerlineish'
 let g:python_highlight_all = 1
+
 colorscheme monokai
+
 
 " tabs
 nnoremap <C-b>  :tabprevious<CR>
@@ -225,3 +235,8 @@ nmap <silent> <A-Right> :wincmd l<CR>
 
 " error navigation
 nmap . :lnext<CR>
+
+
+" copilot
+let g:copilot_enabled = v:false
+nmap = :Copilot panel<CR>
