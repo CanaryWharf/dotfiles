@@ -17,7 +17,7 @@ export PATH="${PATH}:${HOME}/.krew/bin"
 
 # create a pod and ssh into it it and delete it after workds
 krun() {
-    local IMAGE=busybox
+    local IMAGE=nicolaka/netshoot
     while (( "$#" )); do case $1 in
         -i | --image )
             shift;
@@ -72,6 +72,7 @@ _get_nodes_in_cluster() {
     NODES=$(kubectl get nodes --template "$KUBENODETEMPLATE")
     echo $NODES
 }
+
 k-delete-node() {
     local node=""
     local project=""
@@ -111,3 +112,6 @@ _kubenode_completions() {
 compdef _kubenode_completions k-delete-node
 
 alias k-remove-finalizers="kubectl patch --type json --patch='[{\"op\": \"remove\", \"path\": \"/metadata/finalizers\" } ]'"
+
+alias k-suspend-cron="kubectl patch cronjobs -p '{\"spec\" : {\"suspend\" : true }}'"
+alias k-unsuspend-cron="kubectl patch cronjobs -p '{\"spec\" : {\"suspend\" : false }}'"
