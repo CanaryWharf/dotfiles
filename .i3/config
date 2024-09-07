@@ -117,7 +117,7 @@ bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 exec --no-startup-id ~/.fehbg &
 # exec --no-startup-id /usr/bin/dropbox &
 #exec --no-startup-id fcitx &
-# exec --no-startup-id i3-msg 'workspace 5:五; exec thunderbird'
+exec --no-startup-id i3-msg 'workspace 5:五; exec thunderbird'
 # exec --no-startup-id i3-msg 'workspace 3:三; exec slack'
 # REMOVE ON WORK MACHINE
 #exec --no-startup-id i3-msg 'workspace 5:五; exec transmission-gtk'
