@@ -4,7 +4,8 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'posva/vim-vue'
 Plug 'tpope/vim-sensible'
 Plug 'dense-analysis/ale'
-Plug 'ctrlpvim/ctrlp.vim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-airline/vim-airline'
 Plug 'Vimjas/vim-python-pep8-indent'
@@ -136,8 +137,6 @@ set statusline+=%#warningmsg#
 "set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
-
 " Work branch
 " let g:gitgutter_diff_args = 'dev'
 let g:gitgutter_max_signs=9999
@@ -146,6 +145,11 @@ let g:gitgutter_max_signs=9999
 let g:closetag_filetypes = 'html,vue'
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.vue'
 
+lua << EOF
+require('telescope').setup{defaults={file_ignore_patterns={"^.git/"}}}
+EOF
+
+nnoremap <C-p> <cmd>Telescope find_files hidden=true<cr>
 
 
 " Ale options
