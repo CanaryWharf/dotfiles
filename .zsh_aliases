@@ -29,6 +29,7 @@ alias ap="ansible-playbook"
 alias tf="terraform"
 alias gay="lolcat"
 alias hollywood="docker run --rm -it bcbcarl/hollywood"
+alias sherlock="docker run -it --rm sherlock/sherlock"
 
 # My spelling sucks
 alias peotry="poetry"
