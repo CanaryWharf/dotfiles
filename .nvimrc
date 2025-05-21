@@ -48,6 +48,8 @@ Plug 'juliosueiras/vim-terraform-completion'
 
 " Starlark/tilt
 Plug 'cappyzawa/starlark.vim'
+" Read Tiltfiles as starlark
+autocmd BufNewFile,BufRead Tiltfile* setlocal ft=tiltfile syntax=starlark
 
 " Toggle boolean values
 Plug 'https://github.com/sagarrakshe/toggle-bool'
