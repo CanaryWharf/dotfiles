@@ -29,6 +29,7 @@ alias ap="ansible-playbook"
 alias tf="terraform"
 alias gay="lolcat"
 alias hollywood="docker run --rm -it bcbcarl/hollywood"
+alias sherlock="docker run -it --rm sherlock/sherlock"
 
 # My spelling sucks
 alias peotry="poetry"
@@ -92,6 +93,7 @@ _poetry_venv() {
     if ! PYENV_VERSION=$1 poetry --version &> /dev/null
     then
         PYENV_VERSION=$1 pip install poetry
+        PYENV_VERSION=$1 poetry self update
     fi
     poetry env use $1
 }
@@ -101,8 +103,8 @@ _python_venv() {
 }
 
 mkvenv() {
-    if [ -d "venv" ]; then
-        rm -rf "venv"
+    if [ -d ".venv" ]; then
+        rm -rf ".venv"
     fi
     pyenv local $1
     if [ -f "pyproject.toml" ]; then
