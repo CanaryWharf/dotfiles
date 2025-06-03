@@ -51,6 +51,7 @@ Plug 'cappyzawa/starlark.vim'
 " Read Tiltfiles as starlark
 autocmd BufNewFile,BufRead Tiltfile* setlocal ft=tiltfile syntax=starlark
 
+
 " Toggle boolean values
 Plug 'https://github.com/sagarrakshe/toggle-bool'
 
@@ -58,6 +59,10 @@ Plug 'https://github.com/sagarrakshe/toggle-bool'
 Plug 'github/copilot.vim'
 
 call plug#end()
+
+
+" Read yaml.gotmpl as yaml
+autocmd BufNewFile,BufRead *.yaml.gotmpl setlocal ft=yaml syntax=yaml
 
 
 let g:UltiSnipsExpandTrigger="<S-Right>"
@@ -190,6 +195,8 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 let g:LanguageClient_serverCommands = {
             \ 'lua': ['~/workspace/lua-language-server/lua-lsp'],
             \ 'rust': ['rust-analyzer'],
+            \ 'starlark': ['tilt', 'lsp', 'start'],
+            \ 'tiltfile': ['tilt', 'lsp', 'start']
             \ }
 let g:LanguageClient_autoStart = 1
 let g:python3_host_prog = '/usr/bin/python'
