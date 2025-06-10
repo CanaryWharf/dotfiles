@@ -96,36 +96,24 @@ gaps inner 20
 gaps outer 5
 
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id ~/Scripts/i3/volume_change.sh -i 5 #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id ~/Scripts/i3/volume_change.sh -d 5 #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id ~/Scripts/i3/volume_change.sh -t # mute sound
+bindsym XF86AudioRaiseVolume exec --no-startup-id ~/bin/volume_change.sh -i 5 #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id ~/bin/volume_change.sh -d 5 #decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id ~/bin/volume_change.sh -t # mute sound
 
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 10 # increase screen brightness
 bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 10 # decrease screen brightness
 
-# Touchpad controls
-#bindsym XF86TouchpadToggle exec --no-startup-id /some/path/toggletouchpad.sh # toggle touchpad
-
 # Media player controls
 bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
-# bindsym XF86AudioPause exec --no-startup-id playerctl play-pause
 bindsym XF86AudioNext exec --no-startup-id playerctl next
 bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 
 #startup
 exec --no-startup-id ~/.fehbg &
-# exec --no-startup-id /usr/bin/dropbox &
-#exec --no-startup-id fcitx &
 exec --no-startup-id i3-msg 'workspace 5:五; exec thunderbird'
-# exec --no-startup-id i3-msg 'workspace 3:三; exec slack'
-# REMOVE ON WORK MACHINE
-#exec --no-startup-id i3-msg 'workspace 5:五; exec transmission-gtk'
 
-# exec --no-startup-id volnoti
 exec --no-startup-id clipmenud
-
-# exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd
 
 # Fuck the beep
 exec --no-startup-id xset b off
@@ -148,14 +136,7 @@ bindsym KP_Subtract exec --no-startup-id ~/bin/shuffle
 
 
 # Open scratchpad
-bindsym $mod+minus scratchpad show
-
-# Music Controls for keyboard with numpad
-# Cos Laptop doesn't have media controls
-# bindsym KP_Begin exec --no-startup-id clementine -t && pkill -RTMIN+13 i3blocks 
-# bindsym KP_Left exec --no-startup-id clementine -r && pkill -RTMIN+13 i3blocks
-# bindsym KP_Right exec --no-startup-id clementine -f && pkill -RTMIN+13 i3blocks
-
+# bindsym $mod+minus scratchpad show
 
 # Window Configurations
 for_window [instance="lxtask"] floating enable
@@ -183,23 +164,7 @@ client.focused #1793d0 #1793d0 #fff #1793d0 #1793d0
 # finds out, if available)
 set $base1 #363537
 set $base2 #1793d0
-bar {
-        status_command i3blocks
-        strip_workspace_numbers yes
-        font pango: Source Code Pro, Font Awesome 6, Icon, Hiragino Kaku Gothic Pro 14
-
-        position top
-        colors {
-            background $base1
-                statusline #fbfef9
-                separator #808080
-                focused_workspace $base1 $base2 #F1F1F1
-                active_workspace $base1 $base1 #797979 
-                inactive_workspace $base1 $base1 $base2
-                urgent_workspace $base1 $base1 #EA4C59
-        }
-
-}
+include ~/.i3/`cat /etc/hostname`.conf
 
 # border / titlebar
 new_window normal

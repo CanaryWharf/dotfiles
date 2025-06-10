@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+cd ~/Desktop
+ffmpeg -i $1 -c:v libvpx -crf 12 -b:v 500K output.webm

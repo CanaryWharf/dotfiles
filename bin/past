@@ -1,0 +1,4 @@
+#!/bin/bash
+OUTPUT=~/Desktop/$(date +%Y-%m-%dT%H:%M:%S).png
+
+~/workspace/past/past

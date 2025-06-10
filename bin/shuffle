@@ -1,0 +1,1 @@
+DISPLAY=:0 feh --bg-fill "$(find /home/r/Pictures/Wallpapers/|shuf -n1)"

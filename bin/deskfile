@@ -1,0 +1,22 @@
+#!/bin/python
+# Automated desktop file maker
+
+import sys
+import os
+path = "/home/r/.local/share/applications"
+
+command = sys.argv[1]
+appName = command.split('/')[-1]
+
+os.chdir(path)
+fileObj = open("%s.desktop" % appName, 'w')
+fileObj.write("[Desktop Entry]\n")
+if len(sys.argv) > 3:
+    fileObj.write("Name=%s\n" % sys.argv[3])
+else:
+    fileObj.write("Name=%s\n" % appName)
+fileObj.write("Exec=%s\n" % command)
+if len(sys.argv) > 2:
+    fileObj.write("Icon=%s\n" % sys.argv[2])
+fileObj.write("Type=Application\n")
+fileObj.close()
