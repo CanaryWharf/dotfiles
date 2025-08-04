@@ -74,6 +74,9 @@ set wildignore+=*/.git/*
 set wildignore+=*/venv/*
 set wildignore+=*/__pycache__/*
 
+" case insensitive search
+set ignorecase smartcase
+
 "When I misclick shift
 command! W write
 command! Q quit
