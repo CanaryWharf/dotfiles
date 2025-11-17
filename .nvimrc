@@ -159,7 +159,7 @@ lua << EOF
 require('telescope').setup{defaults={file_ignore_patterns={"^.git/"}}}
 EOF
 
-nnoremap <C-p> <cmd>Telescope find_files hidden=true<cr>
+nnoremap <C-p> <cmd>Telescope find_files hidden=false<cr>
 
 
 " Ale options
